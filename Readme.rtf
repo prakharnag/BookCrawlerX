@@ -1,0 +1,43 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red21\green23\blue25;\red205\green214\blue230;
+\red2\green17\blue29;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c10980\c11765\c12941;\cssrgb\c83922\c87059\c92157;
+\cssrgb\c392\c8627\c15294;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Readme \
+\
+1 pip install scrapy\
+2 pip install Tree\
+\
+3. Url to scrape -> https://www.indeed.com/jobs?q=software%20engineer&l=United%20States&from=searchOnHP\
+\
+4 Create Project -> scrapy startproject indeedscraper
+\f1\fs22 \cf2 \CocoaLigature0 \
+
+\f0\fs24 \cf0 \CocoaLigature1 \
+5. Create a genspider -> 
+\f1\fs22 \cf2 \CocoaLigature0 scrapy genspider indeedspider https://www.indeed.com/\
+\
+6. 
+\f2\fs24 \cf3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 Step 5 - Scrapy Shell: Finding Our CSS Selectors\
+\pard\pardeftab720\partightenfactor0
+\cf3 	
+\fs32 To open Scrapy shell use this command:\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb5          scrapy shell\cb1 \
+\pard\pardeftab720\partightenfactor0
+
+\fs24 \cf3 \
+7. we need to use proxy for anti-bots used by indeed.com \
+ 	pip install scrapy-rotating-proxies\
+	create a proxy_list.txt
+\f0 \cf0 \kerning1\expnd0\expndtw0 \
+\
+fetch('
+\f1\fs22 \cf2 \CocoaLigature0 https://www.indeed.com/jobs
+\f0\fs24 \cf0 \CocoaLigature1 ')}
