@@ -18,7 +18,7 @@ NEWSPIDER_MODULE = "indeedscraper.spiders"
 #USER_AGENT = "indeedscraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -51,12 +51,12 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-ROTATING_PROXY_LIST_PATH = 'proxy_list.txt'
+#ROTATING_PROXY_LIST_PATH = 'proxy_list.txt'
 
-DOWNLOADER_MIDDLEWARES = {
-    'rotating_proxies.middlewares.RotatingProxyMiddleware': 350,
-    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,
-}
+#DOWNLOADER_MIDDLEWARES = {
+ #   'rotating_proxies.middlewares.RotatingProxyMiddleware': 350,
+ #   'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,
+#}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
