@@ -1,4 +1,5 @@
 import os
+import re
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
@@ -29,15 +30,22 @@ class BookCrawlerSpider(CrawlSpider):
             "availability": response.css(".availability::text")[1].get()
         }
         
+        # Extract name from URL using regular expression
+        url_pattern = r"http:\/\/books\.toscrape\.com\/catalogue\/([a-zA-Z0-9-]+)_[0-9]+\/index\.html"
+        match = re.match(url_pattern, response.url)
+        if match:
+            name = match.group(1)
+            filename = f"{name}.html"
+        else:
+            filename = "unknown.html"
+        
         # Save HTML content
-        filename = f'{response.url.replace("http://", "").replace("https://", "").replace(".", "_").replace("/", "_")}.html'
         filename = os.path.join("html_files", filename)  # Save files in "html_files" directory
         os.makedirs(os.path.dirname(filename), exist_ok=True)  # Create directory if it doesn't exist
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log(f'Saved file {filename}')
         yield item
-
         # Update page count and check for max pages
         self.visited_pages += 1
         if self.visited_pages >= self.max_pages:

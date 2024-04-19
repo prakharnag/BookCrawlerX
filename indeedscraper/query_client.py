@@ -25,12 +25,14 @@ def send_query(query_text):
 
 if __name__ == "__main__":
     # Example usage
-    query = "crossover"
+    query = "hyperbole and a half"
     results = send_query(query)
     
     if results:
         print("Search Results:")
         for result in results:
-            print(result)
+            #print(result)
+            print(f"Document ID: {result['document_id']}, Title: {result['title']}, Score: {result['score']}")
     else:
         print("No results found.")
+

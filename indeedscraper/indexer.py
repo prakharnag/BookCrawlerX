@@ -46,7 +46,8 @@ def build_inverted_index(html_files_dir):
             for term in unique_terms:
                 df_counts[term.lower()] += 1  # Update df_counts
                 tf_idf = tfidf_value(term, terms, total_docs, df_counts)
-                inverted_index[term].append((doc_index + 1, tf_idf))
+                # Modify postings to include both document number and filename
+                inverted_index[term].append((doc_index + 1, filename, tf_idf))
                 all_terms_list.append(terms)  # Store terms for all documents
 
     if not all_terms_list:
@@ -55,6 +56,7 @@ def build_inverted_index(html_files_dir):
 
     print("Inverted index successfully built.")
     return inverted_index
+
 
 def tfidf_value(term, terms, total_docs, df_counts):
     tf = terms.count(term) / len(terms)  # TF (Term Frequency)
