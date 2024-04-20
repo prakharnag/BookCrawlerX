@@ -30,15 +30,19 @@ def build_inverted_index(html_files_dir):
         print(f"Processing file: {filename}")
         with open(os.path.join(html_files_dir, filename), 'r', encoding='utf-8') as f:
             html_content = f.read()
-            # Extract textual data from HTML (e.g., title, price, availability)
-            # For demonstration purposes, let's assume we're extracting the title only
+
             title = extract_title(html_content)
+            price= extract_price_and_availability(html_content)
+            availability=extract_price_and_availability(html_content)
+
             # Preprocess text
             preprocessed_title = preprocess_text(title)
+            
             # Skip documents with empty preprocessed text
             if not preprocessed_title:
                 print(f"Skipping document {filename} due to empty preprocessed text.")
                 continue
+
             # Update inverted index with unique terms and TF-IDF values
             terms = preprocessed_title.split()  # Split into terms
             unique_terms = set(terms)  # Consider only unique terms
@@ -46,8 +50,7 @@ def build_inverted_index(html_files_dir):
             for term in unique_terms:
                 df_counts[term.lower()] += 1  # Update df_counts
                 tf_idf = tfidf_value(term, terms, total_docs, df_counts)
-                # Modify postings to include both document number and filename
-                inverted_index[term].append((doc_index + 1, filename, tf_idf))
+                inverted_index[term].append((doc_index + 1, preprocessed_title, price, availability, tf_idf))
                 all_terms_list.append(terms)  # Store terms for all documents
 
     if not all_terms_list:
@@ -78,12 +81,29 @@ def extract_title(html_content):
     # Find the <title> tag and extract its text
     title_tag = soup.find('title')
     if title_tag:
-        return title_tag.get_text(strip=True)
+        # Get the text of the title tag
+        title_text = title_tag.get_text(strip=True)
+        # Split the text by the '|' character and take the first part, then strip any whitespace
+        title_parts = title_text.split('|')
+        return title_parts[0].strip()  # Strip any leading or trailing whitespace
     else:
         return ""
 
+def extract_price_and_availability(html_content):
+    # Parse the HTML content using BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # Find the price and availability information
+    price_tag = soup.find('p', class_='price_color')  # Assuming the price is wrapped in a <p> tag with class 'price_color'
+    price = price_tag.get_text(strip=True) if price_tag else ""
+    
+    availability_tag = soup.find('p', class_='instock availability')  # Assuming the availability is wrapped in a <p> tag with class 'instock availability'
+    availability = availability_tag.get_text(strip=True) if availability_tag else ""
+    
+    return price, availability
+    
 # Example usage:
-html_files_dir = "indeedscraper/spiders/html_files"
+html_files_dir = "./spiders/html_files"
 index_filename = "inverted_index.pickle"
 
 inverted_index = build_inverted_index(html_files_dir)
