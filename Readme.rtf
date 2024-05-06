@@ -41,3 +41,69 @@
 fetch('
 \f1\fs22 \cf2 \CocoaLigature0 https://www.indeed.com/jobs
 \f0\fs24 \cf0 \CocoaLigature1 ')}
+
+
+
+
+
+
+
+
+
+### BookCrawlerX
+
+#### Abstract
+
+The project aims to build a comprehensive web content search engine using Python. It consists of three main components: a Scrapy-based Crawler, a Scikit-Learn-based Indexer, and a Flask-based Processor. 
+#### Development Summary/Objectives
+
+##### Crawler:
+***
+* A Scrapy based Crawler for downloading web documents in html format - content crawling:
+*  Initialize using seed URL/Domain, Max Pages, Max Depth
+
+##### Indexer:
+***
+* A Scikit-Learn based Indexer for contructing an inverted index in pickle format - search indexing:
+* Computer TF-IDF score/weight representation, Cosine similarity.
+
+##### Processor:
+****
+* A Flask based Processor for handling free text queries in json format -query processing:
+* Implement Query validation/error-checking, Top-K ranked results
+#### Overview
+
+The project is designed to create a comprehensive web document retrieval system.
+
+##### Solution Outline:
+***
+*  **Crawler(Scrapy-based):** The Crawler is responsible for downloading web documents in HTML format. It initializes using a seed URL/Domain, Max Pages, and Max Depth.
+* *Content Crawling*:
+
+        1.Initializes with a seed URL/Domain to start the crawling process.
+        2.Limits the number of pages to download with Max Pages.
+        3.Limits the depth of crawling with Max Depth.
+        4.Utilizes Scrapy to efficiently crawl web pages and extract HTML content.
+
+* **Indexer(Scikit-Learn-based):** The Indexer is responsible for constructing an inverted index in pickle format.
+* *Search Indexing*:
+
+        1.Stores the inverted index in pickle format for fast retrieval.
+        2.Represents documents using TF-IDF scores/weights.
+        2.Calculates cosine similarity during query execution for efficient search 
+        3.Utilizes Scikit-Learn to construct the inverted index and perform efficient searching.
+
+**Processor (Flask-based):** The Processor handles free text queries in JSON format.
+* *Query Processing:* 
+
+        1.Validates and error-checks the incoming queries.
+        2.Ranks and returns top-K results based on the query.
+        3.Utilizes Flask to handle HTTP requests and responses.
+        4.Integrates the Indexer to search and retrieve relevant documents.
+        5.Provides results in JSON format for easy consumption by client applications.
+
+##### Relevant Literature:
+***
+* Web Crawling and Content Extraction:The project employs Scrapy, a powerful web crawling framework, to extract content from web documents. Literature such as "Scrapy: An Open Source Web Crawling Framework for Python" by Pablo Hoffman et al. provides insights into how Scrapy efficiently extracts data from websites.
+* Inverted Index and Information Retrieval:For the construction of the inverted index and efficient search, the project utilizes Scikit-Learn. Literature such as "Introduction to Information Retrieval" by Christopher D. Manning, Prabhakar Raghavan, and Hinrich Schütze is a fundamental resource providing a comprehensive understanding of inverted indexes, TF-IDF, and cosine similarity.
+* Query Processing and Flask:Flask, a micro web framework, is used for processing free text queries. Literature such as "Flask Web Development: Developing Web Applications with Python" by Miguel Grinberg offers detailed insights into building web applications with Flask.
