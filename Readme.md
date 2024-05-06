@@ -14,11 +14,12 @@ The project aims to build a comprehensive web content search engine using Python
 #### Indexer:
 ***
 * A Scikit-Learn based Indexer for contructing an inverted index in pickle format - search indexing:
-* Computer TF-IDF score/weight representation, Cosine similarity.
+* Computer TF-IDF score/weight representation
 
 #### Processor:
 ****
 * A Flask based Processor for handling free text queries in json format -query processing:
+* Cosine similarity is calculated during query processing
 * Implement Query validation/error-checking, Top-K ranked results
 ### Overview
 
@@ -39,14 +40,13 @@ The project is designed to create a comprehensive web document retrieval system.
 
         1.Stores the inverted index in pickle format for fast retrieval.
         2.Represents documents using TF-IDF scores/weights.
-        2.Calculates cosine similarity during query execution for efficient search 
         3.Utilizes Scikit-Learn to construct the inverted index and perform efficient searching.
 
 **Processor (Flask-based):** The Processor handles free text queries in JSON format.
 * *Query Processing:* 
 
         1.Validates and error-checks the incoming queries.
-        2.Ranks and returns top-K results based on the query.
+        2.Ranks based on cosine similarity and returns top-K results based on the query.
         3.Utilizes Flask to handle HTTP requests and responses.
         4.Integrates the Indexer to search and retrieve relevant documents.
         5.Provides results in JSON format for easy consumption by client applications.
@@ -89,23 +89,23 @@ Integration:
 
 #### Software Components:
 
-*Flask_App Module:*
+*Flask Processor:*
 
         - Handles free text queries in JSON format.
         - Validates and error-checks the incoming queries.
         - Ranks and returns top-K results based on the query.
 
-*Scraper Module*
+*bookcrawlerX - Scraper*
 
         Spiders Module
-            Manages the crawling by downloading web documents
+        - Handles the crawling process by fetching web documents in HTML format
    
      
 #### Interfaces and Implementations:
 
 *Crawler Controller:*
 
-* bookspider.py
+* BookCrawlerSpider.py
 
         - Contains the information regarding url to be crawled along with max_pages and max_depth
         - States the rules for extracting information from links of the url
@@ -137,11 +137,16 @@ Integration:
 Create Project
 ```bash
   scrapy startproject bookcrawlerX
+```
+![projectCreation](/assets/projectCreation.png)
+
+```bash
   pip install Flask
 ```
+
 Create genspider
 ```bash
-  scrapy genspider BookCrawlerSpider
+  scrapy genspider BookCrawlerSpider http://books.toscrape.com/
 ```    
 Install dependencies with pip
 
@@ -156,21 +161,20 @@ Starting the BookCrawler:
 Run the crawler using the following command in the terminal
 ```bash
   cd SearchEngine/scraper/spiders
-  scrapy crawl bookcrawlerspider
+  scrapy crawl BookCrawlerSpider
 ```
 
 Create the Index:
 Run the below command in the terminal
 ```bash
-  cd SearchEngine/scraper/spiders
-  cd SearchEngine/Flask_app/
+  cd SearchEngine/Indexer
   python indexer.py
 ```
 
 Run the Processor:
 Run the below command in the terminal, this will start the Flask server
 ```bash
-  cd SearchEngine/Flask_app/
+  cd SearchEngine/Flask_Processor/
   python flask_processor.py
 ```
 
@@ -181,3 +185,138 @@ Client Query the SearchEngine: Run the below command in the terminal
 ```
 Client can also query the SearchEngine via  http://127.0.0.1:5000/
 
+
+### Conclusion
+
+#### Results
+
+###### *Web Crawling*
+***
+After starting the crawler, we can see status like below:
+
+![scrapySpider](/assets/crawlingStatus.png)
+
+###### *Inverted Index with TF-IDF Value*
+***
+Inverted Index creation status:
+
+![scrapySpider](/assets/invertedIndex.png)
+
+###### *Flask Processor*
+***
+Status of Flask Server status along with ranking documents based on cosine similarity with query. Produces TOP-K results:
+
+![scrapySpider](/assets/flaskProcessor.png)
+
+###### *Client*
+Produces the top-k results. Here k = 5 
+
+![scrapySpider](/assets/clientQuery.png)
+### Data Sources - Links, downloads, access information
+
+- [Books to Scrape](http://books.toscrape.com/)
+- [Scrapy Documentation](https://docs.scrapy.org/en/latest/)
+- [Markdown Guide](https://www.markdownguide.org/basic-syntax/)
+- [Python Documentation](https://docs.python.org/3.11/)
+
+### Test cases
+
+*Test Case for checking inverted index*
+***
+```python
+import pickle
+
+# Function to load the inverted index from pickle file
+def load_index_from_pickle(filename):
+    with open(filename, 'rb') as f:
+        inverted_index = pickle.load(f)
+    return inverted_index
+
+# Load the inverted index from pickle file
+inverted_index = load_index_from_pickle("../Indexer/inverted_index.pickle")
+
+count = 0
+for term, postings in inverted_index.items():
+    print(f"Term: {term}")
+    print("Postings:")
+    for posting in postings:
+        print(posting)
+    print()
+    count += 1
+    if count == 10:
+        break
+```
+*Test Case for Querying  the SearchEngine*
+***
+```python
+if __name__ == "__main__":
+    # Example usage
+    query = "hyperbole and a half" # change this to different query for verification
+    results = send_query(query)
+    
+    if results:
+        print("Search Results:")
+        for result in results:
+            print(result)
+    else:
+        print("No results found.")
+```
+### SourceCode
+
+#### Listings
+
+- [BookCrawlerSpider.py](./bookcrawlerX/bookcrawlerX/spiders/BookCrawlerSpider.py)
+- [HTML Files Directory](./bookcrawlerX/html_files/)
+- [indexer.py](./Indexer/indexer.py)
+- [flask_processor.py](./Flask_Processor/flask_processor.py)
+- [query_client.py](./Flask_Processor/query_client.py)
+- [index.html](./Flask_Processor/templates/index.html)
+
+#### Documentation
+
+- [Flask](https://flask.palletsprojects.com/en/latest/)
+- [Requests](https://flask.palletsprojects.com/en/3.0.x/reqcontext/)
+- [NLTK-CORPUS](https://www.nltk.org/api/nltk.corpus.html)
+- [Beautiful Soup](https://beautiful-soup-4.readthedocs.io/en/latest/)
+- [python collections](https://docs.python.org/3/library/collections.html)
+- [python pickle](https://docs.python.org/3/library/pickle.html)
+
+#### Dependencies(Open-Source)
+
+Flask
+```bash
+pip install Flask
+```
+Requests
+```bash
+
+pip install requests
+```
+
+NLTK-Corpus
+```bash
+pip install nltk
+```
+
+Beautiful Soup
+```bash
+pip install beautifulsoup4
+```
+
+scikit-learn
+```bash
+pip install scikit-learn>=1.2
+```
+Scrapy
+```bash
+pip install scrapy
+```
+
+
+### Bibliography
+
+1. Manning, Christopher D., Prabhakar Raghavan, and Hinrich Schütze. *An Introduction to Information Retrieval*. April 2009. http://www.informationretrieval.org/.
+
+2. Wagle, Manil. *Web Scraping Using Scrapy: A Step by Step Guide to Scrape Websites Using Scrapy*. April 10, 2020. https://medium.com/@manilwagle/web-scraping-using-scrapy-ac376100ffb3.
+
+ 
