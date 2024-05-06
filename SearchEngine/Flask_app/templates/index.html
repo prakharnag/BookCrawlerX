@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }
+    
+            h1 {
+                text-align: center;
+            }
+    
+            form {
+                margin-bottom: 20px;
+            }
+    
+            input[type="text"] {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-sizing: border-box;
+                margin-bottom: 10px;
+            }
+    
+            button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100%;
+                font-size: 16px;
+            }
+    
+            button:hover {
+                opacity: 0.8;
+            }
+    
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+    
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            tr:hover {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>BookCrawlerX</h1>
+        <form id="queryForm">
+            <input type="text" id="queryInput" name="query" placeholder="Search Book"><br>
+            <button type="submit">Submit</button>
+        </form>
+    
+        <div id="results"></div>
+    
+        <script>
+            document.getElementById("queryForm").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+        
+                // Get the query input value
+                var query = document.getElementById("queryInput").value;
+        
+                // Send the query to the Flask server
+                fetch("/query", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ query: query })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display the results in a table
+                    var resultsTable = document.getElementById("results");
+                    resultsTable.innerHTML = ""; // Clear previous results
+                    if (data.results && data.results.length > 0) {
+                        // Create table headers
+                        var tableHeaders = "<tr><th>Document ID</th><th>Title</th><th>Price</th><th>Availability</th><th>Cosine Score</th></tr>";
+                        // Populate table rows with results
+                        var tableBody = data.results.map(function(result) {
+                            return `<tr><td>${result.document_id}</td><td>${result.title}</td><td>${result.price}</td><td>${result.availability}</td><td>${result.cosine_score}</td></tr>`;
+                        }).join("");
+                        // Construct the table HTML
+                        var tableHTML = `<table>${tableHeaders}<tbody>${tableBody}</tbody></table>`;
+                        // Set the table HTML to the results element
+                        resultsTable.innerHTML = tableHTML;
+                    } else {
+                        // Display message if no results found
+                        resultsTable.innerHTML = "<p>No results found.</p>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("results").innerHTML = "<p>An error occurred.</p>";
+                });
+            });
+        </script>    
+    </body>    
+</html>
